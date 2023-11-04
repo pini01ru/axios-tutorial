@@ -7,9 +7,9 @@ function getTodos() {
   // short version
   axios
     .get(`https://jsonplaceholder.typicode.com/todos?_limit=5`, {
-      timeout: 5,
+      timeout: 90000
     })
-    .then((response) => showOutput(response))
+    .then((response) => console.log(response))
     .catch((error) => console.log(error));
 
   // full version
@@ -78,6 +78,21 @@ let arrUrls = [
   "https://jsonplaceholder.typicode.com/todos?_limit=5",
   "https://jsonplaceholder.typicode.com/posts?_limit=5",
 ];
+// OPTION 1
+function getData() {
+  axios
+    .all([
+      axios.get("https://jsonplaceholder.typicode.com/todos?_limit=5"),
+      axios.get("https://jsonplaceholder.typicode.com/posts?_limit=5"),
+    ])
+    .then(
+      axios.spread((todos, posts) => {
+        console.log(todos, posts);
+        showOutput(todos);
+      })
+    );
+}
+// OPTION 2
 function getData() {
   axios.all(arrUrls.map((item) => axios.get(item))).then(
     axios.spread((...data) => {
@@ -85,17 +100,6 @@ function getData() {
       showOutput(data[0]);
     })
   );
-  //   axios
-  //     .all([
-  //       axios.get("https://jsonplaceholder.typicode.com/todos?_limit=5"),
-  //       axios.get("https://jsonplaceholder.typicode.com/posts?_limit=5"),
-  //     ])
-  //     .then(
-  //       axios.spread((todos, posts) => {
-  //         console.log(todos, posts);
-  //         showOutput(todos);
-  //       })
-  //     );
 }
 
 // CUSTOM HEADERS
@@ -158,7 +162,7 @@ function errorHandling() {
 }
 
 // CANCEL TOKEN
-function cancelToken() {}
+function cancelToken() { }
 
 // AXIOS INSTANCE
 
